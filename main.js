@@ -315,6 +315,7 @@ function updateFlight( delta ) {
 const listener = new THREE.AudioListener();
 camera.add( listener );
 const audioLoader = new THREE.AudioLoader();
+audioLoader.setPath( 'sound/' );
 
 function loadSound( url, volume, loop = false ) {
     const sound = new THREE.Audio( listener );
