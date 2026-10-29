@@ -1,0 +1,345 @@
+@font-face {
+    font-family: '8BIT WONDER';
+    src: url('fonts/8bit-wonder.ttf') format('truetype');
+    font-display: swap;
+}
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    overflow: hidden;
+    /* the pixel font is for headings and buttons; paragraphs need a clean font */
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+canvas {
+    display: block;
+}
+
+#views {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    width: max-content;
+    max-width: calc(100% - 32px);
+}
+
+#views button {
+    padding: 8px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 999px;
+    background: rgba(6, 10, 20, 0.7);
+    color: #fff;
+    font: 14px '8BIT WONDER', sans-serif;
+    cursor: pointer;
+}
+
+#views button:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+#views button:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+#order-label {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: rgba(6, 10, 20, 0.85);
+    color: #fff;
+    font-size: 12px;
+    white-space: nowrap;
+    /* never block the pointer from reaching the canvas */
+    pointer-events: none;
+}
+
+/* ---- page panel ---- */
+
+#panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    width: 40%;
+    min-width: 360px;
+    overflow-y: auto;
+    padding: 56px 40px 40px;
+    background: rgba(6, 10, 20, 0.92);
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
+    color: #e8ecf4;
+    line-height: 1.6;
+    transform: translateX(100%);
+    visibility: hidden;
+    /* hide only after the slide-out finishes */
+    transition: transform 0.4s ease, visibility 0s linear 0.4s;
+}
+
+#panel.open {
+    transform: none;
+    visibility: visible;
+    transition: transform 0.4s ease;
+}
+
+#panel-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    background: none;
+    color: #fff;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+#panel-close:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+#panel-close:focus-visible,
+#panel a:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+#panel h2,
+#panel h3 {
+    font-family: '8BIT WONDER', sans-serif;
+    font-weight: normal;
+    line-height: 1.4;
+}
+
+#panel h2 {
+    font-size: 22px;
+    color: #ffb27a;
+}
+
+#panel h3 {
+    margin-top: 24px;
+    font-size: 13px;
+}
+
+#panel p,
+#panel ul {
+    margin-top: 8px;
+}
+
+#panel ul {
+    padding-left: 20px;
+}
+
+#panel .ja,
+#panel .dates {
+    color: #8f9bb3;
+    font-size: 14px;
+}
+
+#panel a {
+    color: #7cc4ff;
+}
+
+/* phones: a sheet that slides up from the bottom */
+@media (max-width: 700px) {
+    #panel {
+        top: auto;
+        left: 0;
+        width: 100%;
+        min-width: 0;
+        max-height: 70vh;
+        padding: 56px 20px 32px;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px 16px 0 0;
+        transform: translateY(100%);
+    }
+}
+
+/* ---- loading screen ---- */
+
+#loader {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: #060a14;
+    color: #e8ecf4;
+    transition: opacity 0.6s ease, visibility 0s linear 0.6s;
+}
+
+#loader.done {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#loader p {
+    /* Latin letters use 8BIT WONDER; Japanese falls through to DotGothic16 */
+    font: 20px '8BIT WONDER', 'DotGothic16', sans-serif;
+    text-align: center;
+    padding: 0 16px;
+}
+
+/* a red ramen bowl with three wisps of steam */
+#loader .bowl {
+    position: relative;
+    width: 96px;
+    height: 48px;
+    margin-top: 48px;
+    border-radius: 0 0 48px 48px;
+    background: #c43d2c;
+    border-top: 6px solid #f2e3c6;
+}
+
+#loader .steam {
+    position: absolute;
+    bottom: 100%;
+    width: 8px;
+    height: 32px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    animation: steam 2s ease-in infinite;
+}
+
+#loader .steam:nth-child(1) { left: 24px; }
+#loader .steam:nth-child(2) { left: 44px; animation-delay: 0.6s; }
+#loader .steam:nth-child(3) { left: 64px; animation-delay: 1.2s; }
+
+@keyframes steam {
+    0%   { transform: translateY(8px) scaleX(1); opacity: 0; }
+    40%  { opacity: 0.8; }
+    100% { transform: translateY(-24px) scaleX(1.8); opacity: 0; }
+}
+
+#loader .bar {
+    position: relative;
+    width: 200px;
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+#loader .bar-fill {
+    width: 0;
+    height: 100%;
+    background: #ffb27a;
+    transition: width 0.2s ease;
+}
+
+/* no file size from the server: loop instead of showing progress */
+#loader .bar.indeterminate .bar-fill {
+    width: 40%;
+    transition: none;
+    animation: slide 1.2s ease-in-out infinite;
+}
+
+@keyframes slide {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(250%); }
+}
+
+/* ---- plain menu ---- */
+
+#pages {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-width: calc(100% - 32px);
+}
+
+#pages a {
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(6, 10, 20, 0.7);
+    color: #fff;
+    font: 11px '8BIT WONDER', sans-serif;
+    text-decoration: none;
+}
+
+#pages a:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+#pages a:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+/* ---- no WebGL: show the pages as a normal scrolling page ---- */
+
+body.plain {
+    overflow: auto;
+    background: #060a14;
+}
+
+body.plain #loader,
+body.plain #views,
+body.plain #pages,
+body.plain #panel-close {
+    display: none;
+}
+
+body.plain #panel {
+    position: static;
+    width: auto;
+    min-width: 0;
+    max-width: 720px;
+    max-height: none;
+    margin: 0 auto;
+    border: none;
+    transform: none;
+    visibility: visible;
+    transition: none;
+}
+
+body.plain #panel section + section {
+    margin-top: 48px;
+}
+
+/* ---- reduced motion ---- */
+
+@media (prefers-reduced-motion: reduce) {
+    #panel,
+    #panel.open,
+    #loader {
+        transition-duration: 0.01s;
+    }
+
+    #loader .steam,
+    #loader .bar.indeterminate .bar-fill {
+        animation: none;
+    }
+
+    #loader .steam {
+        opacity: 0.5;
+    }
+}

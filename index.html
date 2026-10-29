@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang = 'en'>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content = "width=device-width, initial-scale=1.0" />
+        <title>Menya Arif</title>
+        <link rel="preload" href="fonts/8bit-wonder.ttf" as="font" type="font/ttf" crossorigin />
+        <!-- pixel-style Japanese font, for the characters 8BIT WONDER doesn't have -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" />
+        <link rel="stylesheet" href="./style.css" />
+    </head>
+    <body>
+        <div id="loader" role="status" aria-live="polite">
+            <div class="bowl" aria-hidden="true">
+                <span class="steam"></span>
+                <span class="steam"></span>
+                <span class="steam"></span>
+            </div>
+            <p>いらっしゃいませ</p>
+            <div class="bar"><div class="bar-fill"></div></div>
+        </div>
+
+        <!-- plain links for visitors who don't realise the bowls are clickable -->
+        <nav id="pages" aria-label="Pages">
+            <a href="#projects">Projects</a>
+            <a href="#about">About</a>
+            <a href="#experience">Experience</a>
+            <a href="#contact">Contact</a>
+        </nav>
+
+        <nav id="views" aria-label="Camera views">
+            <button data-shot="cam_hero">Street</button>
+            <button data-shot="cam_front">Front</button>
+            <button data-shot="cam_counter">Seat</button>
+            <button data-shot="cam_izakaya">Izakaya</button>
+            <button data-shot="cam_train">Train</button>
+        </nav>
+        <div id="order-label" hidden></div>
+
+        <!-- one panel, four pages; the URL hash (#projects, #about, ...) decides which is open.
+             data-page instead of id, so the browser doesn't try to scroll to the section. -->
+        <aside id="panel" aria-label="Menu" inert>
+            <button id="panel-close" aria-label="Close">&times;</button>
+
+            <section data-page="projects" hidden>
+                <h2>Projects</h2>
+                <p class="ja">鶏白湯 · Chicken Paitan</p>
+                <!-- replace with your own projects -->
+                <article>
+                    <h3>Menya Arif</h3>
+                    <p>This site: a 3D ramen stall under the train tracks, built with three.js. Order a bowl to open a page.</p>
+                </article>
+                <article>
+                    <h3>Project two</h3>
+                    <p>What it is, what you built, and what you used. Add a link to the code or a live demo.</p>
+                </article>
+            </section>
+
+            <section data-page="about" hidden>
+                <h2>About</h2>
+                <p class="ja">醤油 · Shoyu Ramen</p>
+                <!-- replace with your own intro -->
+                <p>A short introduction: who you are, what you like building, and what you're looking for next.</p>
+            </section>
+
+            <section data-page="experience" hidden>
+                <h2>Experience</h2>
+                <p class="ja">味噌 · Miso Ramen</p>
+                <!-- replace with your own experience, newest first -->
+                <article>
+                    <h3>Role · Company</h3>
+                    <p class="dates">2025 – now</p>
+                    <p>One or two lines on what you did and the result.</p>
+                </article>
+            </section>
+
+            <section data-page="contact" hidden>
+                <h2>Contact</h2>
+                <p class="ja">辛味噌 · Spicy Miso</p>
+                <!-- replace with your own links -->
+                <ul>
+                    <li><a href="mailto:you@example.com">you@example.com</a></li>
+                    <li><a href="https://github.com/">GitHub</a></li>
+                    <li><a href="https://www.linkedin.com/">LinkedIn</a></li>
+                </ul>
+            </section>
+        </aside>
+
+        <script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+  }
+}
+        </script>
+        <script type="module" src="./start.js"></script>
+    </body>
+</html>
