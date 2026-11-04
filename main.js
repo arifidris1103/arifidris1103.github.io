@@ -165,6 +165,7 @@ loader.load( 'menya-arif.glb', function ( glb ) {
     setupTrainSound();
     cat =model.getObjectByName( 'cat' );
     catBaseY = cat.position.y;
+    businessman = model.getObjectByName( 'npc_businessman' );
 
     // intro: start further out, behind and above the Front view
     const shot = getShot( 'cam_front' );
@@ -350,6 +351,8 @@ const ambience = loadSound( 'izakaya.mp3', 0.3, true );
 const catMeow = loadSound( 'cat_meow.mp3', 0.8 );
 // the buttons' click (sound/click.mp3, trimmed so it starts straight away)
 const clickSound = loadSound( 'click.mp3', 0.6 );
+// the man at the vending machine buying a drink (sound/vending_machine.mp3)
+const vendingSound = loadSound( 'vending_machine.mp3', 0.45 );
 
 // views that play a sound when you pick them; it fades out when you pick another view
 const soup = loadSound( 'soup.mp3', 0.75 );
@@ -566,7 +569,7 @@ function setHovered( order ) {
     if ( order ) {
         setHighlight( order, true );
         const page = order.page[ 0 ].toUpperCase() + order.page.slice( 1 );
-        orderLabel.textContent = `${ order.label } ${ order.ja } → ${ page }`;
+        orderLabel.textContent = `${ order.ja } → ${ page }`;
         orderLabel.hidden = false;
         renderer.domElement.style.cursor = 'pointer';
     } else {
@@ -619,6 +622,21 @@ function updateCat( delta ) {
     }
 }
 
+// ---- the man at the vending machine buys a drink when you click him ----
+
+let businessman;
+
+function pickBusinessman( event ) {
+    if ( !businessman ) return false;
+    aim( event );
+    return raycaster.intersectObject( businessman, true ).length > 0;
+}
+
+function buyDrink() {
+    if ( vendingSound.isPlaying ) return; // let one drink drop before buying another
+    playSound( vendingSound );
+}
+
 // pointer events, so the same code works for touch
 const canvas = renderer.domElement;
 const downAt = new THREE.Vector2();
@@ -631,7 +649,7 @@ canvas.addEventListener( 'pointermove', ( event ) => {
         return;
     }
     setHovered( pickOrder( event ) );
-    canvas.style.cursor = hovered || pickCat( event ) ? 'pointer' : '';
+    canvas.style.cursor = hovered || pickCat( event ) || pickBusinessman( event ) ? 'pointer' : '';
     orderLabel.style.transform = `translate(${ event.clientX + 16 }px, ${ event.clientY + 16 }px)`;
 } );
 
@@ -649,6 +667,7 @@ canvas.addEventListener( 'pointerup', ( event ) => {
     const picked = pickOrder( event );
     if ( picked ) placeOrder( picked );
     else if ( pickCat( event ) ) jumpCat();
+    else if ( pickBusinessman( event ) ) buyDrink();
 } );
 
 for ( const button of document.querySelectorAll( '#views button' ) ) {
