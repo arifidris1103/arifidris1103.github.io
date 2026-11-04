@@ -269,6 +269,8 @@ const easeInOutCubic = ( t ) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow( -2 * t +
 
 function flyTo( name, onLand, duration = FLIGHT_TIME ) {
     if ( !model ) return;
+    // light up the matching view button (none for a bowl's camera)
+    setCurrentView( name );
     // the landscape street shot crops badly on a tall screen
     if ( name === 'cam_hero' && isPortrait() ) name = 'cam_hero_portrait';
     const shot = getShot( name );
@@ -346,6 +348,8 @@ function fadeOut( sound ) {
 
 const ambience = loadSound( 'izakaya.mp3', 0.3, true );
 const catMeow = loadSound( 'cat_meow.mp3', 0.8 );
+// the buttons' click (sound/click.mp3, trimmed so it starts straight away)
+const clickSound = loadSound( 'click.mp3', 0.6 );
 
 // views that play a sound when you pick them; it fades out when you pick another view
 const soup = loadSound( 'soup.mp3', 0.75 );
@@ -670,6 +674,37 @@ for ( const link of document.querySelectorAll( '#pages a' ) ) {
     } );
 }
 
+// ---- button states and click sound ----
+
+const viewButtons = document.querySelectorAll( '#views button' );
+const pageLinks = document.querySelectorAll( '#pages a' );
+
+// the view you're on turns gold (CSS: aria-pressed="true"); none while at a bowl
+function setCurrentView( shot ) {
+    for ( const button of viewButtons ) {
+        button.setAttribute( 'aria-pressed', button.dataset.shot === shot );
+    }
+}
+
+// the open page's button stays pressed (CSS: aria-current="page")
+function setCurrentPage( page ) {
+    for ( const link of pageLinks ) {
+        if ( link.hash === '#' + page ) link.setAttribute( 'aria-current', 'page' );
+        else link.removeAttribute( 'aria-current' );
+    }
+}
+
+for ( const element of [ ...viewButtons, ...pageLinks ] ) {
+    // play on press, so the click lands as the button sinks
+    element.addEventListener( 'pointerdown', ( event ) => {
+        if ( event.button === 0 ) playSound( clickSound );
+    } );
+    // Enter and Space have no press, so play on the click instead
+    element.addEventListener( 'click', ( event ) => {
+        if ( event.detail === 0 ) playSound( clickSound );
+    } );
+}
+
 // ---- pages: the URL hash decides what's open ----
 
 const panel = document.getElementById( 'panel' );
@@ -683,6 +718,7 @@ function openPanel( page ) {
     panel.inert = false;
     panel.classList.add( 'open' );
     openPage = page;
+    setCurrentPage( page );
     panelClose.focus( { preventScroll: true } );
 }
 
@@ -690,6 +726,7 @@ function closePanel() {
     panel.classList.remove( 'open' );
     panel.inert = true;
     openPage = null;
+    setCurrentPage( null );
 }
 
 // one handler for bowl clicks, links, page load and the Back button
