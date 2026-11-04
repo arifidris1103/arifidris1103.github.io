@@ -694,7 +694,8 @@ function setCurrentPage( page ) {
     }
 }
 
-for ( const element of [ ...viewButtons, ...pageLinks ] ) {
+// every pixel button clicks: the menu, the views, and the page's close and link buttons
+for ( const element of document.querySelectorAll( '.px-btn' ) ) {
     // play on press, so the click lands as the button sinks
     element.addEventListener( 'pointerdown', ( event ) => {
         if ( event.button === 0 ) playSound( clickSound );

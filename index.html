@@ -59,49 +59,93 @@
         <!-- one panel, four pages; the URL hash (#projects, #about, ...) decides which is open.
              data-page instead of id, so the browser doesn't try to scroll to the section. -->
         <aside id="panel" aria-label="Menu" inert>
-            <button id="panel-close" aria-label="Close">&times;</button>
+            <!-- a pixel x on a 7 x 7 grid; it floats over the page's banner -->
+            <button id="panel-close" class="px-btn navy" type="button" aria-label="Close">
+                <svg viewBox="0 0 7 7" width="14" height="14" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><rect x="0" y="0" width="2" height="1"/><rect x="5" y="0" width="2" height="1"/><rect x="1" y="1" width="2" height="1"/><rect x="4" y="1" width="2" height="1"/><rect x="2" y="2" width="3" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="2" y="4" width="3" height="1"/><rect x="1" y="5" width="2" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="0" y="6" width="2" height="1"/><rect x="5" y="6" width="2" height="1"/></svg>
+            </button>
 
-            <section data-page="projects" hidden>
-                <h2>Projects</h2>
-                <p class="ja">鶏白湯 · Chicken Paitan</p>
-                <!-- replace with your own projects -->
-                <article>
-                    <h3>Menya Arif</h3>
-                    <p>This site: a 3D ramen stall under the train tracks, built with three.js. Order a bowl to open a page.</p>
-                </article>
-                <article>
-                    <h3>Project two</h3>
-                    <p>What it is, what you built, and what you used. Add a link to the code or a live demo.</p>
-                </article>
+            <!-- each page takes its bowl's colour (gold, blue, orange, pink), so its banner matches its menu button -->
+
+            <section data-page="projects" class="gold" hidden>
+                <header class="banner">
+                    <h2>Projects</h2>
+                    <p class="ja">鶏白湯 · Chicken Paitan</p>
+                </header>
+                <div class="content">
+                    <!-- replace with your own projects; a card can have a screenshot, tags and link buttons -->
+                    <article>
+                        <img class="shot" src="images/menya-arif.jpg" alt="The Menya Arif ramen stall at night" width="1200" height="675" loading="lazy">
+                        <h3>Menya Arif</h3>
+                        <p>This site: a 3D ramen stall under the train tracks, built with three.js. Order a bowl to open a page.</p>
+                        <ul class="tags">
+                            <li>three.js</li>
+                            <li>JavaScript</li>
+                            <li>glTF</li>
+                        </ul>
+                        <div class="links">
+                            <a class="px-btn gold small" href="https://github.com/arifidris1103/arifidris1103.github.io" target="_blank" rel="noopener">Code</a>
+                        </div>
+                    </article>
+                    <article>
+                        <h3>Project two</h3>
+                        <p>What it is, what you built, and what you used. Add a link to the code or a live demo.</p>
+                    </article>
+                </div>
             </section>
 
-            <section data-page="about" hidden>
-                <h2>About</h2>
-                <p class="ja">醤油 · Shoyu Ramen</p>
-                <!-- replace with your own intro -->
-                <p>A short introduction: who you are, what you like building, and what you're looking for next.</p>
+            <section data-page="about" class="blue" hidden>
+                <header class="banner">
+                    <h2>About</h2>
+                    <p class="ja">醤油 · Shoyu Ramen</p>
+                </header>
+                <div class="content">
+                    <div class="card about">
+                        <figure>
+                            <img src="images/chef-arif.jpg" alt="Chef Arif, the voxel chef behind the counter" width="240" height="240" loading="lazy">
+                            <figcaption>Chef Arif</figcaption>
+                        </figure>
+                        <!-- replace with your own intro -->
+                        <p>A short introduction: who you are, what you like building, and what you're looking for next.</p>
+                    </div>
+                </div>
             </section>
 
-            <section data-page="experience" hidden>
-                <h2>Experience</h2>
-                <p class="ja">味噌 · Miso Ramen</p>
-                <!-- replace with your own experience, newest first -->
-                <article>
-                    <h3>Role · Company</h3>
-                    <p class="dates">2025 – now</p>
-                    <p>One or two lines on what you did and the result.</p>
-                </article>
+            <section data-page="experience" class="orange" hidden>
+                <header class="banner">
+                    <h2>Experience</h2>
+                    <p class="ja">味噌 · Miso Ramen</p>
+                </header>
+                <div class="content">
+                    <!-- replace with your own experience, newest first -->
+                    <article>
+                        <div class="entry-head">
+                            <h3>Role · Company</h3>
+                            <span class="dates">2025 – now</span>
+                        </div>
+                        <p>One or two lines on what you did and the result.</p>
+                    </article>
+                </div>
             </section>
 
-            <section data-page="contact" hidden>
-                <h2>Contact</h2>
-                <p class="ja">辛味噌 · Spicy Miso</p>
-                <!-- replace with your own links -->
-                <ul>
-                    <li><a href="mailto:you@example.com">you@example.com</a></li>
-                    <li><a href="https://github.com/">GitHub</a></li>
-                    <li><a href="https://www.linkedin.com/">LinkedIn</a></li>
-                </ul>
+            <section data-page="contact" class="pink" hidden>
+                <header class="banner">
+                    <h2>Contact</h2>
+                    <p class="ja">辛味噌 · Spicy Miso</p>
+                </header>
+                <div class="content">
+                    <!-- replace you@example.com with your email -->
+                    <div class="links stack">
+                        <a class="px-btn pink wide" href="mailto:you@example.com">
+                            <svg viewBox="0 0 11 11" width="22" height="22" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><rect x="0" y="1" width="11" height="1"/><rect x="0" y="9" width="11" height="1"/><rect x="0" y="1" width="1" height="9"/><rect x="10" y="1" width="1" height="9"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="8" y="3" width="1" height="1"/><rect x="9" y="2" width="1" height="1"/></svg><span>Email</span>
+                        </a>
+                        <a class="px-btn pink wide" href="https://github.com/arifidris1103" target="_blank" rel="noopener">
+                            <svg viewBox="0 0 11 11" width="22" height="22" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><rect x="4" y="1" width="6" height="2"/><rect x="7" y="3" width="3" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="5" y="5" width="2" height="1"/><rect x="8" y="5" width="2" height="2"/><rect x="4" y="6" width="2" height="1"/><rect x="3" y="7" width="2" height="1"/><rect x="2" y="8" width="2" height="1"/><rect x="1" y="9" width="2" height="1"/><rect x="1" y="10" width="1" height="1"/></svg><span>GitHub</span>
+                        </a>
+                        <a class="px-btn pink wide" href="https://www.linkedin.com/in/arif-idris03" target="_blank" rel="noopener">
+                            <svg viewBox="0 0 11 11" width="22" height="22" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><rect x="4" y="1" width="6" height="2"/><rect x="7" y="3" width="3" height="1"/><rect x="6" y="4" width="4" height="1"/><rect x="5" y="5" width="2" height="1"/><rect x="8" y="5" width="2" height="2"/><rect x="4" y="6" width="2" height="1"/><rect x="3" y="7" width="2" height="1"/><rect x="2" y="8" width="2" height="1"/><rect x="1" y="9" width="2" height="1"/><rect x="1" y="10" width="1" height="1"/></svg><span>LinkedIn</span>
+                        </a>
+                    </div>
+                </div>
             </section>
         </aside>
 
