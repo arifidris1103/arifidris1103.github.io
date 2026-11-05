@@ -4,6 +4,22 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content = "width=device-width, initial-scale=1.0" />
         <title>Menya Arif</title>
+        <meta name="description" content="A 3D ramen stall under the train tracks in Osaka. Order a bowl to see Arif Idris's projects, experience and contact details." />
+        <link rel="icon" href="images/icon-32.png" sizes="32x32" type="image/png" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+        <!-- the preview card when the link is shared (LinkedIn, X, LINE, Slack...);
+             if the site moves to its own domain, change the three addresses that start with https -->
+        <link rel="canonical" href="https://arifidris1103.github.io/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Menya Arif" />
+        <meta property="og:title" content="Menya Arif · Arif Idris's portfolio" />
+        <meta property="og:description" content="A 3D ramen stall under the train tracks in Osaka. Order a bowl to see Arif's projects, experience and contact details." />
+        <meta property="og:url" content="https://arifidris1103.github.io/" />
+        <meta property="og:image" content="https://arifidris1103.github.io/images/preview.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="The Menya Arif ramen stall at night, under a railway bridge" />
+        <meta name="twitter:card" content="summary_large_image" />
         <link rel="preload" href="fonts/8bit-wonder.ttf" as="font" type="font/ttf" crossorigin />
         <!-- pixel-style Japanese font, for the characters 8BIT WONDER doesn't have -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -30,6 +46,12 @@
             <a class="px-btn orange" href="#experience">Experience</a>
             <a class="px-btn pink" href="#contact">Contact</a>
         </nav>
+
+        <!-- sound on/off: aria-pressed="true" while the sound is on; the icon follows it -->
+        <button id="sound" class="px-btn teal" type="button" aria-pressed="true" aria-label="Sound">
+            <svg class="on" viewBox="0 0 11 11" width="22" height="22" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><rect x="1" y="4" width="2" height="3"/><rect x="3" y="3" width="1" height="5"/><rect x="4" y="2" width="1" height="7"/><rect x="5" y="1" width="1" height="9"/><rect x="7" y="4" width="1" height="3"/><rect x="8" y="2" width="1" height="1"/><rect x="9" y="3" width="1" height="5"/><rect x="8" y="8" width="1" height="1"/></svg>
+            <svg class="off" viewBox="0 0 11 11" width="22" height="22" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><rect x="1" y="4" width="2" height="3"/><rect x="3" y="3" width="1" height="5"/><rect x="4" y="2" width="1" height="7"/><rect x="5" y="1" width="1" height="9"/><rect x="7" y="4" width="1" height="1"/><rect x="9" y="4" width="1" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="9" y="6" width="1" height="1"/></svg>
+        </button>
 
         <!-- pixel icons drawn on an 11 x 11 grid; the gold button (aria-pressed="true") is the view you're on -->
         <nav id="views" aria-label="Camera views">
@@ -60,7 +82,7 @@
              data-page instead of id, so the browser doesn't try to scroll to the section. -->
         <aside id="panel" aria-label="Menu" inert>
             <!-- a pixel x on a 7 x 7 grid; it floats over the page's banner -->
-            <button id="panel-close" class="px-btn navy" type="button" aria-label="Close">
+            <button id="panel-close" class="px-btn red" type="button" aria-label="Close">
                 <svg viewBox="0 0 7 7" width="14" height="14" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><rect x="0" y="0" width="2" height="1"/><rect x="5" y="0" width="2" height="1"/><rect x="1" y="1" width="2" height="1"/><rect x="4" y="1" width="2" height="1"/><rect x="2" y="2" width="3" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="2" y="4" width="3" height="1"/><rect x="1" y="5" width="2" height="1"/><rect x="4" y="5" width="2" height="1"/><rect x="0" y="6" width="2" height="1"/><rect x="5" y="6" width="2" height="1"/></svg>
             </button>
 

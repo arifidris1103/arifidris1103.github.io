@@ -395,6 +395,32 @@ document.addEventListener( 'visibilitychange', () => {
     }
 } );
 
+// ---- sound on/off button; the choice is remembered for the next visit ----
+
+const soundButton = document.getElementById( 'sound' );
+const SOUND_KEY = 'menya-arif-sound';
+
+let soundOn = true;
+try {
+    soundOn = localStorage.getItem( SOUND_KEY ) !== 'off';
+} catch ( error ) {
+    // storage blocked (some private windows): start with the sound on
+}
+listener.gain.gain.value = soundOn ? 1 : 0;
+soundButton?.setAttribute( 'aria-pressed', String( soundOn ) );
+
+soundButton?.addEventListener( 'click', () => {
+    soundOn = !soundOn;
+    listener.setMasterVolume( soundOn ? 1 : 0 ); // a quick fade, so there's no pop
+    soundButton.setAttribute( 'aria-pressed', String( soundOn ) );
+    if ( soundOn ) playSound( clickSound ); // this press's own click was silent
+    try {
+        localStorage.setItem( SOUND_KEY, soundOn ? 'on' : 'off' );
+    } catch ( error ) {
+        // not saved; it still works for this visit
+    }
+} );
+
 // ---- train sound ----
 
 

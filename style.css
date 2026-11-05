@@ -90,7 +90,7 @@ canvas {
 .orange { --body: #f2a346; --hl: #fad593; --sh: #ae452a; --ink: #ae452a; } /* miso */
 .pink   { --body: #eb6c77; --hl: #f8b0b3; --sh: #a8324e; --ink: #a8324e; } /* spicy miso */
 .teal   { --body: #4fb8b0; --hl: #a2e3da; --sh: #23727f; --ink: #23727f; } /* the stall's roof */
-.navy   { --body: #2a3352; --hl: #46527e; --sh: #141a2e; --ink: #141a2e; } /* the close button */
+.red    { --body: #e5483d; --hl: #f8948a; --sh: #a42a24; --ink: #a42a24; } /* the close button */
 
 /* the view you're on turns gold, like the Play button */
 #views .px-btn[aria-pressed="true"] {
@@ -546,6 +546,43 @@ canvas {
     }
 }
 
+/* ---- sound on/off, top right ---- */
+
+#sound {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    z-index: 1;
+    width: 44px;
+    padding: var(--u) 0;
+}
+
+/* a speaker with waves while the sound is on, crossed out while it's off */
+#sound[aria-pressed="true"] .off,
+#sound[aria-pressed="false"] .on {
+    display: none;
+}
+
+/* wide screens: while a page is open, step left of the panel instead of hiding under it
+   (narrower screens don't have room next to the menu, so there the panel covers it) */
+@media (min-width: 1200px) {
+    #sound {
+        transition: right 0.4s ease, transform 0.08s ease-out, filter 0.08s ease-out;
+    }
+
+    body:has(#panel.open) #sound {
+        right: calc(max(40%, 360px) + 24px);
+    }
+}
+
+/* phones: under the two-by-two menu, on the right */
+@media (max-width: 700px) {
+    #sound {
+        top: 132px;
+        right: 20px;
+    }
+}
+
 /* ---- no WebGL: show the pages as a normal scrolling page ---- */
 
 body.plain {
@@ -556,6 +593,7 @@ body.plain {
 body.plain #loader,
 body.plain #views,
 body.plain #pages,
+body.plain #sound,
 body.plain #panel-close {
     display: none;
 }
@@ -585,6 +623,7 @@ body.plain #panel section + section {
     #panel.open,
     #loader,
     #views,
+    #sound,
     .px-btn {
         transition-duration: 0.01s;
     }
