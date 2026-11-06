@@ -205,7 +205,7 @@ camera.position.z = 5;
 
 // camera shots baked into the model:
 // cam_front, cam_hero, cam_hero_portrait, cam_counter, cam_izakaya, cam_train,
-// cam_chicken, cam_shoyu, cam_miso, cam_spicy
+// cam_chicken, cam_shoyu, cam_miso, cam_spicy, cam_skills (the izakaya's chalkboard menu)
 function getShot( name ) {
     const shot = model.getObjectByName( name );
     if ( !shot ) console.warn( 'no camera named', name );
@@ -539,7 +539,7 @@ function updateSteam( delta ) {
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 const orderLabel = document.getElementById( 'order-label' );
-let orderTargets = []; // the 8 objects to test: each order's bowl group and menu tag
+let orderTargets = []; // the objects to test: each order's bowl group and menu tag, and the chalkboard
 let orderCameras = {}; // order id -> camera shot, e.g. chicken -> cam_chicken
 let hovered = null;    // userData of the order under the pointer
 const HOVER_SCALE = 1.08;
@@ -786,9 +786,11 @@ function route() {
         // another bowl while a page is open just switches pages when the camera lands
         flyTo( picked.camera, () => openPanel( picked.page ) );
     } else if ( openPage || flight?.onLand ) {
-        // closing a page (or cancelling a flight to one): back to the seat
+        // closing a page (or cancelling a flight to one): back to the seat,
+        // or to the view the order belongs to (the chalkboard goes back to the Izakaya)
+        const from = model.userData.orders.find( ( o ) => o.page === openPage );
         closePanel();
-        flyTo( 'cam_counter' );
+        flyTo( from?.back ?? 'cam_counter' );
     }
 }
 

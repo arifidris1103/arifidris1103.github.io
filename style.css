@@ -91,6 +91,7 @@ canvas {
 .pink   { --body: #eb6c77; --hl: #f8b0b3; --sh: #a8324e; --ink: #a8324e; } /* spicy miso */
 .teal   { --body: #4fb8b0; --hl: #a2e3da; --sh: #23727f; --ink: #23727f; } /* the stall's roof */
 .red    { --body: #e5483d; --hl: #f8948a; --sh: #a42a24; --ink: #a42a24; } /* the close button */
+.green  { --body: #7cc46a; --hl: #c3eaa5; --sh: #367a3c; --ink: #367a3c; } /* the izakaya's menu: skills */
 
 /* the view you're on turns gold, like the Play button */
 #views .px-btn[aria-pressed="true"] {
@@ -353,6 +354,58 @@ canvas {
     box-shadow: 0 0 0 4px #fff, 0 8px 0 0 #e2d2b4;
 }
 
+/* skills: the izakaya's menu, each skill and its dish on one dotted line */
+#panel h3 span {
+    margin-left: 8px;
+    font: 15px/1 'DotGothic16', system-ui, sans-serif;
+    color: #8a6e4b;
+    text-transform: none;
+}
+
+#panel .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    list-style: none;
+}
+
+#panel .menu-line {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+#panel .skill {
+    font: 12px/1.2 '8BIT WONDER', 'DotGothic16', sans-serif;
+    color: #2b2118;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+#panel .skill[lang="ja"] {
+    font: 15px/1.2 'DotGothic16', system-ui, sans-serif;
+}
+
+#panel .dots {
+    flex: 1;
+    min-width: 16px;
+    border-bottom: 2px dotted #d8c6a3;
+    transform: translateY(-3px);
+}
+
+#panel .dish {
+    font: 15px/1 'DotGothic16', system-ui, sans-serif;
+    color: #367a3c;
+    white-space: nowrap;
+}
+
+#panel .menu p:not(.menu-line) {
+    margin-top: 3px;
+    font-size: 14px;
+    line-height: 1.45;
+    color: #5a4630;
+}
+
 #panel figcaption {
     font: 10px/1 '8BIT WONDER', sans-serif;
     color: #5a4630;
@@ -506,7 +559,8 @@ canvas {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
-    max-width: calc(100% - 48px);
+    /* leave room for the sound button on the right */
+    max-width: calc(100% - 108px);
 }
 
 /* phones: the menu goes two by two and the view buttons show only their icons */
@@ -565,7 +619,7 @@ canvas {
 
 /* wide screens: while a page is open, step left of the panel instead of hiding under it
    (narrower screens don't have room next to the menu, so there the panel covers it) */
-@media (min-width: 1200px) {
+@media (min-width: 1400px) {
     #sound {
         transition: right 0.4s ease, transform 0.08s ease-out, filter 0.08s ease-out;
     }
@@ -575,7 +629,7 @@ canvas {
     }
 }
 
-/* phones: under the two-by-two menu, on the right */
+/* phones: at the end of the menu's third row, beside Skills */
 @media (max-width: 700px) {
     #sound {
         top: 132px;
