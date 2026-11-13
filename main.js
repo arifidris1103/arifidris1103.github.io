@@ -205,7 +205,8 @@ camera.position.z = 5;
 
 // camera shots baked into the model:
 // cam_front, cam_hero, cam_hero_portrait, cam_counter, cam_izakaya, cam_train,
-// cam_chicken, cam_shoyu, cam_miso, cam_spicy, cam_skills (the izakaya's chalkboard menu)
+// cam_chicken, cam_shoyu, cam_miso, cam_spicy, cam_skills (the izakaya's chalkboard menu),
+// cam_taisho (the izakaya's griller at his grill)
 function getShot( name ) {
     const shot = model.getObjectByName( name );
     if ( !shot ) console.warn( 'no camera named', name );
