@@ -92,6 +92,7 @@ canvas {
 .teal   { --body: #4fb8b0; --hl: #a2e3da; --sh: #23727f; --ink: #23727f; } /* the stall's roof */
 .red    { --body: #e5483d; --hl: #f8948a; --sh: #a42a24; --ink: #a42a24; } /* the close button */
 .green  { --body: #7cc46a; --hl: #c3eaa5; --sh: #367a3c; --ink: #367a3c; } /* the izakaya's menu: skills */
+.indigo { --body: #5b6ad0; --hl: #a5aef2; --sh: #2f3a94; --ink: #2f3a94; } /* the taishō's chat */
 
 /* the view you're on turns gold, like the Play button */
 #views .px-btn[aria-pressed="true"] {
@@ -637,6 +638,207 @@ canvas {
     }
 }
 
+/* ---- the taishō's chat (#taisho) ---- */
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* the page fills the panel, so the question box sits at the bottom */
+#panel section[data-page="taisho"]:not([hidden]) {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+#panel .chat {
+    flex: 1;
+    gap: 0;
+    padding-bottom: 0;
+}
+
+#panel .chat-log {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-bottom: 24px;
+    list-style: none;
+}
+
+#panel .msg {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    max-width: 92%;
+}
+
+#panel .msg p {
+    padding: 12px 16px 14px;
+    font-size: 15px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* the taishō: his face, and a paper card like the other pages */
+#panel .msg.taisho::before {
+    content: "";
+    flex: none;
+    width: 32px;
+    height: 32px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Crect width='8' height='2' fill='%231e1a18'/%3E%3Crect y='2' width='8' height='1' fill='%23f4f1ea'/%3E%3Crect y='3' width='8' height='4' fill='%23e8b38a'/%3E%3Crect x='2' y='4' width='1' height='1' fill='%231e1a18'/%3E%3Crect x='5' y='4' width='1' height='1' fill='%231e1a18'/%3E%3Crect x='3' y='5' width='2' height='1' fill='%23a33a2c'/%3E%3Crect y='7' width='8' height='1' fill='%232f3a94'/%3E%3C/svg%3E") center / contain no-repeat;
+    image-rendering: pixelated;
+}
+
+#panel .msg.taisho p {
+    background:
+        linear-gradient(#fff 0 0) center top / calc(100% - 8px) 4px no-repeat,
+        linear-gradient(#e2d2b4 0 0) center bottom / calc(100% - 8px) 4px no-repeat,
+        linear-gradient(#fffaf1 0 0) center / 100% calc(100% - 8px) no-repeat;
+}
+
+/* the visitor: right-aligned, in the page's indigo */
+#panel .msg.you {
+    align-self: flex-end;
+}
+
+#panel .msg.you p {
+    color: #fff;
+    background: linear-gradient(var(--sh) 0 0) center bottom / 100% 4px no-repeat, var(--body);
+}
+
+/* waiting for an answer: three dots */
+#panel .msg.typing p::after {
+    content: "...";
+    display: inline-block;
+    width: 3ch;
+    overflow: hidden;
+    vertical-align: bottom;
+    animation: typing 1.2s steps(4) infinite;
+}
+
+@keyframes typing {
+    from { width: 0; }
+    to { width: 4ch; }
+}
+
+#panel .msg.error p {
+    color: #8a3324;
+}
+
+/* chips, question box and note stay at the bottom while the conversation scrolls */
+#panel .chat-dock {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0 -40px;
+    padding: 16px 40px 22px;
+    background: #fbf3e3;
+    box-shadow: 0 -4px 0 #f1e4c8;
+}
+
+#panel .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#panel .chat-form {
+    display: flex;
+    gap: 12px;
+}
+
+#panel .chat-form input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 14px;
+    /* 16px stops phones zooming in on focus */
+    font: 16px/1.3 system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color: #2b2118;
+    background: #fffaf1;
+    border: 3px solid #e2d2b4;
+    border-radius: 0;
+}
+
+#panel .chat-form input:focus {
+    border-color: #2f3a94;
+    outline: none;
+}
+
+#panel .chat-form .send {
+    height: auto;
+    padding: var(--u) 14px;
+}
+
+#panel .chat-form button:disabled,
+#panel .chips button:disabled {
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+#panel .chat-note {
+    font-size: 12px;
+    color: #7a6650;
+}
+
+@media (max-width: 700px) {
+    #panel .chat-dock {
+        margin: 0 -20px;
+        padding: 12px 20px 16px;
+    }
+
+    #panel .chat-note {
+        display: none;
+    }
+}
+
+/* the taishō's speech bubble on the Taisho view: placed over his head by main.js */
+#taisho-bubble {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    padding: 10px 14px;
+    font: 15px/1.2 'DotGothic16', system-ui, sans-serif;
+    color: #2b2118;
+    background: #fffaf1;
+    border: 3px solid #2f3a94;
+    box-shadow: 0 4px 0 #2f3a94;
+    cursor: pointer;
+    white-space: nowrap;
+    transform: translate(-50%, -100%);
+    animation: bob 2.4s ease-in-out infinite;
+}
+
+/* the bubble's tail */
+#taisho-bubble::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -14px;
+    width: 12px;
+    height: 10px;
+    background: #2f3a94;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+#taisho-bubble:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 4px;
+}
+
+@keyframes bob {
+    50% { margin-top: -5px; }
+}
+
 /* ---- no WebGL: show the pages as a normal scrolling page ---- */
 
 body.plain {
@@ -648,7 +850,8 @@ body.plain #loader,
 body.plain #views,
 body.plain #pages,
 body.plain #sound,
-body.plain #panel-close {
+body.plain #panel-close,
+body.plain #taisho-bubble {
     display: none;
 }
 
@@ -683,7 +886,8 @@ body.plain #panel section + section {
     }
 
     #loader .steam,
-    #loader .bar.indeterminate .bar-fill {
+    #loader .bar.indeterminate .bar-fill,
+    #taisho-bubble {
         animation: none;
     }
 

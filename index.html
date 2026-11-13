@@ -82,6 +82,8 @@
             </button>
         </nav>
         <div id="order-label" hidden></div>
+        <!-- floats over the taishō on the Taisho view; opens his chat -->
+        <button id="taisho-bubble" type="button" hidden>Ask me about Arif!</button>
 
         <!-- one panel, four pages; the URL hash (#projects, #about, ...) decides which is open.
              data-page instead of id, so the browser doesn't try to scroll to the section. -->
@@ -228,6 +230,34 @@
                             </li>
                         </ul>
                     </article>
+                </div>
+            </section>
+            <!-- the taishō of the izakaya answers questions about you: click him, or his bubble on the Taisho view.
+                 The answers come from the taisho-chatbot Worker (see TAISHO_URL in main.js). -->
+            <section data-page="taisho" class="indigo" hidden>
+                <header class="banner">
+                    <h2>Ask the Taisho</h2>
+                    <p class="ja">大将に聞く</p>
+                </header>
+                <div class="content chat">
+                    <ol class="chat-log" aria-live="polite" aria-label="Conversation">
+                        <li class="msg taisho"><p>いらっしゃい! I've known Arif since he built this street. Ask me anything about him.</p></li>
+                    </ol>
+                    <div class="chat-dock">
+                        <div class="chips">
+                            <button class="px-btn indigo small" type="button" data-question="Why did Arif move into software?">Why software?</button>
+                            <button class="px-btn indigo small" type="button" data-question="What kind of job is Arif looking for?">Open to work?</button>
+                            <button class="px-btn indigo small" type="button" data-question="What projects has Arif built?">Projects</button>
+                        </div>
+                        <form class="chat-form">
+                            <label class="visually-hidden" for="taisho-input">Your question</label>
+                            <input id="taisho-input" type="text" maxlength="300" autocomplete="off" enterkeyhint="send" placeholder="Ask about Arif...">
+                            <button class="px-btn indigo small send" type="submit" aria-label="Send">
+                                <svg viewBox="0 0 11 11" width="18" height="18" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true" focusable="false"><rect x="1" y="5" width="8" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="8" y="4" width="1" height="1"/><rect x="9" y="5" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="6" y="8" width="1" height="1"/></svg>
+                            </button>
+                        </form>
+                        <p class="chat-note">The taishō answers from Arif's notes and can get things wrong.</p>
+                    </div>
                 </div>
             </section>
         </aside>

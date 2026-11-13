@@ -723,10 +723,12 @@ for ( const link of document.querySelectorAll( '#pages a' ) ) {
 // ---- button states and click sound ----
 
 const viewButtons = document.querySelectorAll( '#views button' );
+let currentShot = null; // the view (or bowl) the camera last flew to
 const pageLinks = document.querySelectorAll( '#pages a' );
 
 // the view you're on turns gold (CSS: aria-pressed="true"); none while at a bowl
 function setCurrentView( shot ) {
+    currentShot = shot;
     for ( const button of viewButtons ) {
         button.setAttribute( 'aria-pressed', button.dataset.shot === shot );
     }
@@ -766,7 +768,8 @@ function openPanel( page ) {
     panel.classList.add( 'open' );
     openPage = page;
     setCurrentPage( page );
-    panelClose.focus( { preventScroll: true } );
+    if ( page === 'taisho' && !sheetLayout.matches ) chatInput.focus( { preventScroll: true } );
+    else panelClose.focus( { preventScroll: true } );
 }
 
 function closePanel() {
@@ -806,6 +809,115 @@ function clearHash() {
 panelClose.addEventListener( 'click', clearHash );
 document.addEventListener( 'keydown', ( event ) => {
     if ( event.key === 'Escape' && location.hash ) clearHash();
+} );
+
+// ---- the taishō's chat (#taisho) ----
+// Click the taishō at the izakaya's grill (an order in the model, like the bowls) or his bubble
+// on the Taisho view. Questions go to the taisho-chatbot Worker on Cloudflare, which answers
+// from Arif's notes (docs/test_chunks.md in the taisho-chatbot repo).
+
+const TAISHO_URL = 'https://taisho-chatbot.arifidris.workers.dev/chat';
+
+const chatLog = panel.querySelector( '.chat-log' );
+const chatForm = panel.querySelector( '.chat-form' );
+const chatInput = document.getElementById( 'taisho-input' );
+const chatButtons = panel.querySelectorAll( '.chips button, .chat-form button' );
+const chatHistory = []; // earlier questions and answers, sent along for follow-ups
+let chatBusy = false;
+
+// what the taishō says when the Worker can't answer
+const CHAT_ERRORS = {
+    slow_down: 'One at a time, please! Give me a minute to catch up.',
+    closed: "That's all from me today: the grill's closed until tomorrow. The Contact page always works.",
+    too_long: "That's a long one. Can you ask it in fewer words?",
+};
+const CHAT_ERROR = "Sorry, I didn't catch that over the grill. Try again in a moment.";
+
+function addMessage( kind, text ) {
+    const item = document.createElement( 'li' );
+    item.className = `msg ${ kind }`;
+    const paragraph = document.createElement( 'p' );
+    paragraph.textContent = text; // text, never HTML: the answer comes from a model
+    item.append( paragraph );
+    chatLog.append( item );
+    panel.scrollTo( { top: panel.scrollHeight, behavior: reducedMotion.matches ? 'auto' : 'smooth' } );
+    return item;
+}
+
+async function askTaisho( text ) {
+    const question = text.trim();
+    if ( !question || chatBusy ) return;
+    chatBusy = true;
+    for ( const button of chatButtons ) button.disabled = true;
+
+    addMessage( 'you', question );
+    const waiting = addMessage( 'taisho typing', '' );
+    let answer = CHAT_ERROR;
+    let ok = false;
+    try {
+        const response = await fetch( TAISHO_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify( { question, history: chatHistory.slice( -6 ) } ),
+            signal: AbortSignal.timeout( 30000 ),
+        } );
+        const data = await response.json().catch( () => ( {} ) );
+        ok = response.ok && typeof data.answer === 'string' && data.answer !== '';
+        answer = ok ? data.answer : CHAT_ERRORS[ data.error ] ?? CHAT_ERROR;
+    } catch {
+        // offline, timed out, or the Worker isn't deployed yet
+    }
+
+    waiting.remove();
+    addMessage( ok ? 'taisho' : 'taisho error', answer );
+    if ( ok ) chatHistory.push( { role: 'user', content: question }, { role: 'assistant', content: answer } );
+
+    chatBusy = false;
+    for ( const button of chatButtons ) button.disabled = false;
+    if ( !sheetLayout.matches ) chatInput.focus( { preventScroll: true } );
+}
+
+chatForm.addEventListener( 'submit', ( event ) => {
+    event.preventDefault();
+    const question = chatInput.value;
+    chatInput.value = '';
+    askTaisho( question );
+} );
+
+for ( const chip of panel.querySelectorAll( '.chips button' ) ) {
+    chip.addEventListener( 'click', () => askTaisho( chip.dataset.question ) );
+}
+
+// "Ask me about Arif!" over the taishō's head, while you're on the Taisho view
+
+const taishoBubble = document.getElementById( 'taisho-bubble' );
+const pagesNav = document.getElementById( 'pages' );
+const bubbleAt = new THREE.Vector3();
+let taishoHead = null;
+
+function updateTaishoBubble() {
+    let show = model && currentShot === 'cam_taisho' && !flight && !openPage;
+    if ( show ) {
+        taishoHead ??= model.getObjectByName( 'npc_griller_head' ) ?? model.getObjectByName( 'npc_griller' );
+        taishoHead.getWorldPosition( bubbleAt );
+        bubbleAt.y += 0.3; // just above his hat
+        bubbleAt.project( camera );
+        show = bubbleAt.z < 1 && Math.abs( bubbleAt.x ) < 1 && Math.abs( bubbleAt.y ) < 1;
+        // never over the menu buttons: the bubble hangs above its point, so keep that point below them
+        const below = pagesNav.getBoundingClientRect().bottom + taishoBubble.offsetHeight + 24;
+        const x = ( bubbleAt.x + 1 ) / 2 * window.innerWidth;
+        const y = Math.max( ( 1 - bubbleAt.y ) / 2 * window.innerHeight, below );
+        const half = taishoBubble.offsetWidth / 2 + 12;
+        taishoBubble.style.left = `${ Math.min( Math.max( x, half ), window.innerWidth - half ) }px`;
+        taishoBubble.style.top = `${ y }px`;
+    }
+    if ( taishoBubble.hidden === show ) taishoBubble.hidden = !show;
+}
+
+taishoBubble.addEventListener( 'click', () => {
+    playSound( clickSound );
+    if ( location.hash === '#taisho' ) route();
+    else location.hash = 'taisho';
 } );
 
 // ---- keep the bowl visible beside the panel ----
@@ -858,6 +970,7 @@ function animate( time ) {
     clampTarget(); // after update(), which is where panning moves the target
   }
   updateViewOffset( delta );
+  updateTaishoBubble();
 
   composer.render();
 }
