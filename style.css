@@ -143,21 +143,6 @@ canvas {
     justify-content: flex-start;
 }
 
-#order-label {
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 2;
-    padding: 6px 10px;
-    border-radius: 6px;
-    background: rgba(6, 10, 20, 0.85);
-    color: #fff;
-    font-size: 12px;
-    white-space: nowrap;
-    /* never block the pointer from reaching the canvas */
-    pointer-events: none;
-}
-
 /* ---- page panel ---- */
 
 #panel {

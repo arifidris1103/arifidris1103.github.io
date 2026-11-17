@@ -539,7 +539,6 @@ function updateSteam( delta ) {
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
-const orderLabel = document.getElementById( 'order-label' );
 let orderTargets = []; // the objects to test: each order's bowl group and menu tag, and the chalkboard
 let orderCameras = {}; // order id -> camera shot, e.g. chicken -> cam_chicken
 let hovered = null;    // userData of the order under the pointer
@@ -593,16 +592,8 @@ function setHovered( order ) {
     if ( hovered ) setHighlight( hovered, false );
     hovered = order;
 
-    if ( order ) {
-        setHighlight( order, true );
-        const page = order.page[ 0 ].toUpperCase() + order.page.slice( 1 );
-        orderLabel.textContent = `${ order.ja } → ${ page }`;
-        orderLabel.hidden = false;
-        renderer.domElement.style.cursor = 'pointer';
-    } else {
-        orderLabel.hidden = true;
-        renderer.domElement.style.cursor = '';
-    }
+    if ( order ) setHighlight( order, true );
+    renderer.domElement.style.cursor = order ? 'pointer' : '';
 }
 
 // clicking a bowl only sets the hash; route() does the rest
@@ -677,7 +668,6 @@ canvas.addEventListener( 'pointermove', ( event ) => {
     }
     setHovered( pickOrder( event ) );
     canvas.style.cursor = hovered || pickCat( event ) || pickBusinessman( event ) ? 'pointer' : '';
-    orderLabel.style.transform = `translate(${ event.clientX + 16 }px, ${ event.clientY + 16 }px)`;
 } );
 
 canvas.addEventListener( 'pointerleave', () => setHovered( null ) );
