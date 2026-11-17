@@ -324,6 +324,36 @@ canvas {
     gap: 18px;
 }
 
+#panel .about-text {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* phones: the photo above the text, so the text keeps the card's full width */
+@media (max-width: 700px) {
+    #panel .about {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* experience: where, under the job title */
+#panel .org {
+    margin-top: -6px;
+    font-size: 13px;
+    color: #8a6e4b;
+}
+
+/* education: the school on the left, its years on the right */
+#panel article .entry-head p {
+    font-size: 14px;
+}
+
+#panel article .entry-head + .entry-head {
+    margin-top: 4px;
+}
+
 #panel figure {
     flex: none;
     display: flex;
